@@ -1,7 +1,6 @@
 # ++++++++++++ #
 # PROXY SERVER #
 # ------------ #
-estu wall
 require 'socket'
 require 'timeout'
 
