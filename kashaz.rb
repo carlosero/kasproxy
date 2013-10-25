@@ -4,17 +4,17 @@
 
 require 'net/http'
 class Kashaz
-  KASHAZ_URL = "http://localhost:3333"
+  KASHAZ_URL = "http://localhost"
   GENERATE_KEY_URL = "#{KASHAZ_URL}/poses/generate_key?"
-  VALIDATE_KEY_URL = "#{KASHAZ_URL}/poses/validate_key?"
+  AUTHENTICATE_URL = "#{KASHAZ_URL}/poses/authenticate?"
 
   class << self
     def generate_key(serial)
       get(GENERATE_KEY_URL, {serial: serial})
     end
 
-    def validate_key(key)
-      get(VALIDATE_KEY_URL, {key: key})
+    def authenticate(key)
+      get(AUTHENTICATE_URL, {key: key})
     end
 
     def get(url, params = {})
