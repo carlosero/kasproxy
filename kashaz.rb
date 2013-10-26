@@ -3,6 +3,7 @@
 # --------------------- #
 
 require 'net/http'
+require 'active_support'
 class Kashaz
   KASHAZ_URL = "http://localhost"
   GENERATE_KEY_URL = "#{KASHAZ_URL}/poses/generate_key?"
@@ -29,7 +30,7 @@ end
 class Hash
   def to_query
     inject("") do |str,(k,v)|
-       str += str.blank? ? "#{k}=#{v}" : "&#{k}=#{v}"
+       str += str == "" ? "#{k}=#{v}" : "&#{k}=#{v}"
     end
   end
 end
