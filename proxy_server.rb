@@ -25,11 +25,14 @@ class ProxyServer
   # should go to kas and response something
   def interpretate(str)
     values = str.split(CSV_CHAR)
+    @logger.log("values = #{values}")
+    @logger.log("values[0] = #{values[0].downcase}")
+    @logger.log("str.length = #{str.length}")
     ret = str
     case values[0].downcase
     when 'autenticar'
       key = Kashaz.generate_key(values[1])
-      ret = key["key"] ? 'ok' : "nok#{CSV_CHAR}Numero de serial incorrecto#{CSV_CHAR}"
+      ret = key["key"] ? 'ok' : "nok#{CSV_CHAR}Serial inexistente#{CSV_CHAR}"
     when 'key'
       authenticated = Kashaz.authenticate(values[1])
       if authenticated["response"] == 'authenticated'
