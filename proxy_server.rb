@@ -8,7 +8,6 @@ require File.expand_path("../kashaz", __FILE__)
 class ProxyServer
   PORT = 8000
   CONNECTION_TIMEOUT = 600 # seconds
-  CSV_CHAR = "|" # ordered, should be temporal
   @logger = nil
   @server = nil
 
@@ -23,39 +22,12 @@ class ProxyServer
   end
 
   # should go to kas and response something
-  def interpretate(str)
-    values = str.split(CSV_CHAR)
-    @logger.log("values = #{values}")
-    @logger.log("values[0] = #{values[0].downcase}")
-    @logger.log("str.length = #{str.length}")
-    ret = str
-    case values[0].downcase
-    when 'autenticar'
-      key = Kashaz.generate_key(values[1])
-      ret = key["key"] ? 'ok' : "nok#{CSV_CHAR}Serial inexistente#{CSV_CHAR}"
-    when 'key'
-      authenticated = Kashaz.authenticate(values[1])
-      if authenticated["response"] == 'authenticated'
-        ret = 'ok'
-      else
-        ret = "nok#{CSV_CHAR}Clave incorrecta#{CSV_CHAR}"
-      end
-    end
-    # serial = values[0]
-    # type_tx = values[1]
-    # customer_id = values[2]
-    # ammount = values[3]
-    # type_account = values[4]
-    # transaction_id = values[5]
-    # mac_challenge = values[6]
-    # mac = values[7]
-    # Los campos que irán en el JSON que enviará el POS son
-    # POS ID, Type TX, Customer ID, Monto, Type Count, TX ID, MAC Challenge, MAC
-    # Lo que necesito recibir de la APP es: Rechazado en caso de ser rechazada la operación y Aprobado, Customer ID, Monto, TX ID y MAC en caso 
-    # de ser aprobado.
-    # El TX ID es el transaction ID que genera la APP para cada operación
-    # En todos los casos el MAC está al final indicando que toma todos los valores de los campos anteriores y le calcula el SHA1.
-    ret
+  def interpretate(request)
+    @logger.log("request = #{request}")
+    @logger.log("request.length = #{request.length}")
+    # now kashaz-pos will handle everything, we just send and response
+    response = Kashaz.send_request(request)
+    response["response"]
   end
 
   def handle_incomming_data(incomingData, connection)
