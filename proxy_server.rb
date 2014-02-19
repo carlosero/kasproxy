@@ -23,8 +23,6 @@ class ProxyServer
 
   # should go to kas and response something
   def interpretate(request)
-    @logger.log("request = #{request}")
-    @logger.log("request.length = #{request.length}")
     # now kashaz-pos will handle everything, we just send and response
     response = Kashaz.send_request(request)
     response["response"]
@@ -38,8 +36,8 @@ class ProxyServer
 
     @logger.log "Incoming: #{incomingData}" unless incomingData.nil? || incomingData == ""
 
-    if incomingData == "DISCONNECT"
-      @logger.log "Received: DISCONNECT, closing connection"
+    if incomingData == "DISCONNECT" || incomingData == 'endconn'
+      @logger.log "Received: #{incomingData}, closing connection"
       connection.close
     else
       unless incomingData.nil? || incomingData == ""
