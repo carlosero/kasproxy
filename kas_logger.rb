@@ -9,6 +9,9 @@ class KasLogger
     # @logger = Logger.new(File.expand_path('../log.txt', __FILE__))
     @logger = Logger.new(STDOUT)
     @logger.level = Logger::INFO
+    @logger.formatter = proc do |severity, datetime, progname, msg|
+      "#{severity} -: #{msg}\n"
+    end
   end
 
   def log(msg = "")
